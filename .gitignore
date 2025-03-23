@@ -1,0 +1,20 @@
+# .NET Core / .NET 5+ / .NET 6+ / .NET 9
+bin/
+obj/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Rider
+.idea/
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Linux
+*~
