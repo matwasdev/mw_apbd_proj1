@@ -2,39 +2,45 @@
 
 public class ContainerShip
 {
-    List<Container> containers = new List<Container>();
-    private double maxSpeed;
-    private int containersLimit;
-    private double maxPossibleWeight;
-    private double currentWeight;
+    public List<Container> Containers = new List<Container>();
+    public double MaxSpeed {get; set;}
+    public int ContainersLimit {get; set;}
+    public double MaxPossibleWeight {get; set;}
+    public double CurrentWeight {get; set;}
 
     public ContainerShip(double maxSpeed,int containersLimit,double maxPossibleWeight)
     {
-        this.maxSpeed = maxSpeed;
-        this.containersLimit = containersLimit;
-        this.maxPossibleWeight = maxPossibleWeight;
+        this.MaxSpeed = maxSpeed;
+        this.ContainersLimit = containersLimit;
+        this.MaxPossibleWeight = maxPossibleWeight;
     }
 
 
-    public void addContainer(Container container)
+    public void AddContainer(Container container)
     {
-        if (containers.Count + 1 > containersLimit)
+        if (container.IsOnShip == true)
+        {
+            Console.WriteLine("KONTENER JEST JUZ NA STATKU!!!");
+            return;
+        }
+        
+        if (Containers.Count + 1 > ContainersLimit)
             throw new OverfillException();
 
-        if (currentWeight + container.masaLadunku + container.wagaSamegoKontenera> maxPossibleWeight)
+        if (CurrentWeight + container.MasaLadunku + container.WagaSamegoKontenera> MaxPossibleWeight)
             throw new OverfillException();
                 
-        containers.Add(container);
-        container.isOnShip=true;
-        currentWeight += container.masaLadunku+container.wagaSamegoKontenera;
+        Containers.Add(container);
+        container.IsOnShip=true;
+        CurrentWeight += container.MasaLadunku+container.WagaSamegoKontenera;
     }
 
-    public void addListOfContainers(List<Container> listOfContainersToAdd)
+    public void AddListOfContainers(List<Container> listOfContainersToAdd)
     {
         
         double weightToLoad = 0;
 
-        if (containers.Count + listOfContainersToAdd.Count > containersLimit)
+        if (Containers.Count + listOfContainersToAdd.Count > ContainersLimit)
         {
             Console.WriteLine("Limit of possible containers exceeded, cannot make an operation");
             return;
@@ -42,10 +48,15 @@ public class ContainerShip
         
         for (int i = 0; i < listOfContainersToAdd.Count; i++)
         {
-            weightToLoad += listOfContainersToAdd[i].masaLadunku+listOfContainersToAdd[i].wagaSamegoKontenera;
+            if (listOfContainersToAdd[i].IsOnShip == true)
+            {
+                Console.WriteLine("KONTENER JUZ NA STATKU!!!");
+                return;
+            }
+            weightToLoad += listOfContainersToAdd[i].MasaLadunku+listOfContainersToAdd[i].WagaSamegoKontenera;
         }
 
-        if (currentWeight + weightToLoad > maxPossibleWeight)
+        if (CurrentWeight + weightToLoad > MaxPossibleWeight)
         {
             Console.WriteLine("Limit of possible weight exceeded, cannot make an operation");
             return;
@@ -53,79 +64,62 @@ public class ContainerShip
 
         for (int i = 0; i < listOfContainersToAdd.Count; i++)
         {
-            containers.Add(listOfContainersToAdd[i]);
-            listOfContainersToAdd[i].isOnShip=true;
-            currentWeight+=listOfContainersToAdd[i].masaLadunku+listOfContainersToAdd[i].wagaSamegoKontenera;
+            Containers.Add(listOfContainersToAdd[i]);
+            listOfContainersToAdd[i].IsOnShip=true;
+            CurrentWeight+=listOfContainersToAdd[i].MasaLadunku+listOfContainersToAdd[i].WagaSamegoKontenera;
         }
         
         Console.WriteLine(listOfContainersToAdd.Count + " containers added");
     }
     
 
-    public void removeContainer(Container container)
+    public void RemoveContainer(Container container)
     {
-        containers.Remove(container);
-        container.isOnShip = false;
-        currentWeight -= container.masaLadunku;
-        currentWeight -= container.wagaSamegoKontenera;
+        Containers.Remove(container);
+        container.IsOnShip = false;
+        CurrentWeight -= container.MasaLadunku;
+        CurrentWeight -= container.WagaSamegoKontenera;
     }
-
-    public void changeContainerForContainer(string containerToChangeNr, Container containerToAdd)
-    {
-        
-        for (int i = 0; i < containers.Count; i++)
-        {
-            if (containers[i].serialNumber == containerToChangeNr)
-            {
-                containers[i].isOnShip = false;
-                containers.RemoveAt(i);
-                addContainer(containerToAdd);
-                containerToAdd.isOnShip = true;
-                return;
-            }
-        }
-        throw new Exception("No such container found");
-        
-    }
-
-    public static void relocateContainer(string containerNr, ContainerShip shipFrom, ContainerShip shipTo)
+    
+    public static void RelocateContainer(string containerNr, ContainerShip shipFrom, ContainerShip shipTo)
     {
         bool doesExist = false;
         Container contToRelocate = null;
-        for (int i = 0; i < shipFrom.containers.Count; i++)
+        for (int i = 0; i < shipFrom.Containers.Count; i++)
         {
-            if (shipFrom.containers[i].serialNumber == containerNr)
+            if (shipFrom.Containers[i].SerialNumber == containerNr)
             {
-                contToRelocate = shipFrom.containers[i];
-                shipFrom.containers.RemoveAt(i);
+                contToRelocate = shipFrom.Containers[i];
+                shipFrom.Containers.RemoveAt(i);
                 doesExist = true;
                 break;
             }
         }
         if(!doesExist)
             throw new Exception("No such container found");
-        
-        shipTo.addContainer(contToRelocate);
+
+        contToRelocate.IsOnShip = false;
+        shipTo.AddContainer(contToRelocate);
     }
 
-    public void infoAboutShip()
+    public void InfoAboutShip()
     {
-        Console.WriteLine("NUMBER-OF-CONTAINERS-ON-THE-SHIP: " + containers.Count);
-        Console.WriteLine("MAX-SPEED: "+maxSpeed);
-        Console.WriteLine("MAX-CONTAINERS-NUMBER: "+containersLimit);
-        Console.WriteLine("MAX-WEIGHT-OF-ALL-CONTAINERS: "+maxPossibleWeight);
+        Console.WriteLine("NUMBER-OF-CONTAINERS-ON-THE-SHIP: " + Containers.Count);
+        Console.WriteLine("MAX-SPEED: "+MaxSpeed);
+        Console.WriteLine("MAX-CONTAINERS-NUMBER: "+ContainersLimit);
+        Console.WriteLine("MAX-WEIGHT-OF-ALL-CONTAINERS: "+MaxPossibleWeight);
         Console.WriteLine("=================================================");
         Console.WriteLine("LIST-OF-CARRIED-CONTAINERS:");
-        for (int i = 0; i < containers.Count; i++)
+        for (int i = 0; i < Containers.Count; i++)
         {
-            Console.WriteLine(containers[i].serialNumber);
+            Console.WriteLine(Containers[i].SerialNumber);
         }
         Console.WriteLine();
     }
 
     public string InfoShorter()
     {
-        return "(speed="+maxSpeed+", maxContainerNum="+containersLimit+", maxWeight="+maxPossibleWeight+")";
+        return "(speed="+MaxSpeed+", maxContainerNum="+ContainersLimit+", maxWeight="+MaxPossibleWeight+")";
     }
 
 

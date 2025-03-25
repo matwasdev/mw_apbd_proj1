@@ -2,31 +2,31 @@
 
 public class ContainerC : Container
 {
-    private double temperature;
-    private string productType;
+    public double Temperature { get; set; }
+    public string ProductType { get; set; }
 
     public ContainerC(double masaLadunku, double height, double wagaSamegoKontenera, double depth, 
         double maxCapacity, string productType, double temperature)
         : base(masaLadunku, height, wagaSamegoKontenera, depth, maxCapacity)
     {
-        this.temperature = temperature;
-        this.productType = productType;
+        this.Temperature = temperature;
+        this.ProductType = productType;
         
-        serialNumber = "KON-C-"+CONTAINER_NUMBER;
+        SerialNumber = "KON-C-"+CONTAINER_NUMBER;
     }
     
     
-    public override void fillContainer(int weightToFill)
+    public override void FillContainer(double weightToFill)
     {
-        if (weightToFill+masaLadunku > maxCapacity)
+        if (weightToFill+MasaLadunku > MaxCapacity)
             throw new OverfillException();
         
-        masaLadunku += weightToFill;
+        MasaLadunku += weightToFill;
     }
 
-    public override void unfillContainer()
+    public override void UnfillContainer()
     {
-        masaLadunku = 0;
+        MasaLadunku = 0;
     }
     
     

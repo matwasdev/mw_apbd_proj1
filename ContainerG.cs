@@ -2,35 +2,35 @@
 
 public class ContainerG : Container, IHazardNotifier
 {
-    public int pressure;
+    public int Pressure;
     
     public ContainerG(double masaLadunku, double height, double wagaSamegoKontenera, double depth, 
         double maxCapacity, int pressure)
         : base(masaLadunku, height, wagaSamegoKontenera, depth, maxCapacity)
     {
-        this.pressure = pressure;
-        serialNumber = "KON-G-"+CONTAINER_NUMBER;
+        this.Pressure = pressure;
+        SerialNumber = "KON-G-"+CONTAINER_NUMBER;
     }
 
     
     
-    public void sendWarningNotification()
+    public void SendWarningNotification()
     {
-        Console.WriteLine("Dangerous situation occured on container: " + serialNumber);
+        Console.WriteLine("Dangerous situation occured on container: " + SerialNumber);
     }
     
 
-    public override void fillContainer(int weightToFill)
+    public override void FillContainer(double weightToFill)
     {
-        if (weightToFill+masaLadunku > maxCapacity)
+        if (weightToFill+MasaLadunku > MaxCapacity)
             throw new OverfillException();
         
-        masaLadunku += weightToFill;
+        MasaLadunku += weightToFill;
     }
 
-    public override void unfillContainer()
+    public override void UnfillContainer()
     {
-        masaLadunku = 0 + (0.05 * masaLadunku);
+        MasaLadunku = 0 + (0.05 * MasaLadunku);
     }
     
 

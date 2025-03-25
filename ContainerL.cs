@@ -2,37 +2,38 @@
 
 public class ContainerL : Container, IHazardNotifier
 {
-    private bool isHazardous;
+    public bool IsHazardous { get; set; }
 
     public ContainerL(double masaLadunku, double height, double wagaSamegoKontenera, double depth, 
         double maxCapacity, bool isHazardous)
         : base(masaLadunku, height, wagaSamegoKontenera, depth, maxCapacity)
     {
-        this.isHazardous = isHazardous;
-        serialNumber = "KON-L-"+CONTAINER_NUMBER;
+        IsHazardous = isHazardous;
+        SerialNumber = "KON-L-"+CONTAINER_NUMBER;
     }
 
 
-    public void sendWarningNotification()
+    public void SendWarningNotification()
     {
-        Console.WriteLine("Dangerous situation occured on container: " + serialNumber);
+        Console.WriteLine("Dangerous situation occured on container: " + SerialNumber);
     }
 
 
-    public override void fillContainer(int weightToFill)
+    public override void FillContainer(double weightToFill)
     {
-        if (weightToFill+masaLadunku > maxCapacity)
+        if (weightToFill + MasaLadunku > MaxCapacity)
             throw new OverfillException();
+
+        if ((weightToFill + MasaLadunku > 0.9 *  MaxCapacity) || (weightToFill + MasaLadunku > 0.5 *  MaxCapacity && IsHazardous)) 
+            SendWarningNotification();
         
-        if ( (0.9*weightToFill+masaLadunku>maxCapacity) || (0.5*weightToFill+masaLadunku>maxCapacity && isHazardous))
-            sendWarningNotification();
-        
-        masaLadunku += weightToFill;
+
+        MasaLadunku += weightToFill;
     }
 
-    public override void unfillContainer()
+    public override void UnfillContainer()
     {
-        masaLadunku = 0;
+        MasaLadunku = 0;
     }
     
     

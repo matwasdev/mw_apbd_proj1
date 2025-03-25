@@ -31,7 +31,7 @@ while (true)
     {
         for (int i = 0; i < wszystkieContainers.Count; i++)
         {
-            Console.WriteLine(wszystkieContainers[i].infoContainerShorter());
+            Console.WriteLine(wszystkieContainers[i].InfoContainerShorter());
         }
     }
     Console.WriteLine();
@@ -41,16 +41,16 @@ while (true)
     Console.WriteLine("2. Usun kontenerowiec");
     Console.WriteLine("3. Dodaj kontener");
     Console.WriteLine("4. Usun kontener");
-    Console.WriteLine("ZAŁADUJ KONTENER!!!!!!!!!!!!");
-    Console.WriteLine("5. Rozładuj kontener");
+    Console.WriteLine("5. Załaduj kontener");
+    Console.WriteLine("6. Rozładuj kontener");
     Console.WriteLine("=====================");
-    Console.WriteLine("6. Dodaj kontener na statek");
-    Console.WriteLine("7. Dodaj listę kontenerów na statek");
-    Console.WriteLine("8. Usuń kontener ze statku");
-    Console.WriteLine("9. Zastąp kontener na statku innym kontenerem");
-    Console.WriteLine("10. Przenieś kontener między dwoma statkami");
-    Console.WriteLine("11. Wypisz info o kontenerze");
-    Console.WriteLine("12. Wypisz info o statku");
+    Console.WriteLine("7. Dodaj kontener na statek");
+    Console.WriteLine("8. Dodaj listę kontenerów na statek");
+    Console.WriteLine("9. Usuń kontener ze statku");
+    Console.WriteLine("10. Zastąp kontener na statku innym kontenerem");
+    Console.WriteLine("11. Przenieś kontener między dwoma statkami");
+    Console.WriteLine("12. Wypisz info o kontenerze");
+    Console.WriteLine("13. Wypisz info o statku");
     
     string response = Console.ReadLine();
     if (response.Equals("1"))
@@ -76,7 +76,15 @@ while (true)
             Console.WriteLine("Brak takiego indeksu");
             continue;
         }
-        wszystkieShips.RemoveAt(index);
+
+        if (wszystkieShips[index].Containers.Count == 0)
+        {
+            wszystkieShips.RemoveAt(index);
+        }
+        else
+        {
+            Console.WriteLine("Wpierw trzeba usunąć kontenery ze statku!");
+        }
     }
 
     if (response.Equals("3"))
@@ -131,7 +139,7 @@ while (true)
         string serialNumber = Console.ReadLine();
         for (int i = 0; i < wszystkieContainers.Count; i++)
         {
-            if (wszystkieContainers[i].serialNumber.Equals(serialNumber))
+            if (wszystkieContainers[i].SerialNumber.Equals(serialNumber))
             {
                 wszystkieContainers.RemoveAt(i);
                 Console.WriteLine("Usunieto: "+serialNumber);
@@ -140,29 +148,68 @@ while (true)
         }
     }
 
-    if (response.Equals("5"))
+    if (response.Equals("6"))
     {
         Console.WriteLine("Podaj serial number kontenera (np. KON-C-1)");
         string serialNumber = Console.ReadLine();
         for (int i = 0; i < wszystkieContainers.Count; i++)
         {
-            if (wszystkieContainers[i].serialNumber.Equals(serialNumber))
+            if (wszystkieContainers[i].SerialNumber.Equals(serialNumber))
             {
-                wszystkieContainers[i].unfillContainer();
+                wszystkieContainers[i].UnfillContainer();
                 Console.WriteLine("Rozładowano: "+serialNumber);
                 break;
             }
         }
     }
+    
+    if (response.Equals("5"))
+    {
+        Console.WriteLine("Podaj serial number kontenera (np. KON-C-1)");
+        string serialNumber = Console.ReadLine();
+        char contType = serialNumber[4];
+        int occuranceIndex = 0;
+        for (int i = 0; i < wszystkieContainers.Count; i++)
+        {
+            if (wszystkieContainers[i].SerialNumber.Equals(serialNumber))
+            {
+                occuranceIndex = i;
+                break;
+            }
+        }
 
-    if (response.Equals("6"))
+        Console.WriteLine("Podaj wage do załadowania");
+        double waga = double.Parse(Console.ReadLine());
+        
+        string productTypeResponse = "";
+        if (contType=='C')
+        {
+            ContainerC containerC = (ContainerC) wszystkieContainers[occuranceIndex];
+            Console.WriteLine("Podaj rodzaj ładunku który chcesz załadowac:");
+            productTypeResponse = Console.ReadLine();
+            if (containerC.ProductType.Equals(productTypeResponse))
+            {
+                containerC.FillContainer(waga);
+            }
+            else
+                Console.WriteLine("Nie można załadować tego produktu - jest niezgodny");
+        }
+        else
+        {
+            Container container = wszystkieContainers[occuranceIndex];
+            container.FillContainer(waga);
+        }
+    }
+    
+
+    if (response.Equals("7"))
     {
         Container container = null;
         Console.WriteLine("Podaj serial number kontenera (np. KON-C-1)");
         string serialNumber = Console.ReadLine();
         for (int i = 0; i < wszystkieContainers.Count; i++)
         {
-            if (wszystkieContainers[i].serialNumber.Equals(serialNumber))
+            if (wszystkieContainers[i].SerialNumber.Equals(serialNumber))
             {
                 container = wszystkieContainers[i];
                 break;
@@ -174,12 +221,12 @@ while (true)
         {
             if (index==i)
             {
-                wszystkieShips[i].addContainer(container);
+                wszystkieShips[i].AddContainer(container);
             }
         }
     }
 
-    if (response.Equals("7"))
+    if (response.Equals("8"))
     {
         List<Container> containers = new List<Container>();
         while (true)
@@ -188,7 +235,7 @@ while (true)
             string serialNumber = Console.ReadLine();
             for (int i = 0; i < wszystkieContainers.Count; i++)
             {
-                if (wszystkieContainers[i].serialNumber.Equals(serialNumber))
+                if (wszystkieContainers[i].SerialNumber.Equals(serialNumber))
                 {
                     Container container = wszystkieContainers[i];
                     containers.Add(container);
@@ -205,13 +252,13 @@ while (true)
         {
             if (index==i)
             {
-                wszystkieShips[i].addListOfContainers(containers);
+                wszystkieShips[i].AddListOfContainers(containers);
                 break;
             }
         }
     }
 
-    if (response.Equals("8"))
+    if (response.Equals("9"))
     {
         Container container = null;
         
@@ -219,7 +266,7 @@ while (true)
         string serialNumber = Console.ReadLine();
         for (int i = 0; i < wszystkieContainers.Count; i++)
         {
-            if (wszystkieContainers[i].serialNumber.Equals(serialNumber))
+            if (wszystkieContainers[i].SerialNumber.Equals(serialNumber))
             {
                 container = wszystkieContainers[i];
                 break;
@@ -232,15 +279,15 @@ while (true)
         {
             if (index==i)
             {
-                wszystkieShips[i].removeContainer(container);
-                Console.WriteLine("Usunieto ze statku: "+i + " , kontener: "+container.serialNumber);
+                wszystkieShips[i].RemoveContainer(container);
+                Console.WriteLine("Usunieto ze statku: "+i + " , kontener: "+container.SerialNumber);
                 break;
             }
         }
     }
     
     
-    if (response.Equals("9"))
+    if (response.Equals("10"))
     {
         Console.WriteLine("Podaj serial number starego kontenera do zamiany");
         string staryCont = Console.ReadLine();
@@ -254,12 +301,12 @@ while (true)
         ContainerShip ship = null;
         for (int i = 0; i < wszystkieContainers.Count; i++)
         {
-            if (wszystkieContainers[i].serialNumber.Equals(staryCont) && wszystkieContainers[i].isOnShip)
+            if (wszystkieContainers[i].SerialNumber.Equals(staryCont) && wszystkieContainers[i].IsOnShip)
             {
                 staryContainer = wszystkieContainers[i];
             }
 
-            if (wszystkieContainers[i].serialNumber.Equals(nowyCont) && wszystkieContainers[i].isOnShip == false)
+            if (wszystkieContainers[i].SerialNumber.Equals(nowyCont) && wszystkieContainers[i].IsOnShip == false)
             {
                 nowyContainer = wszystkieContainers[i];
             }
@@ -270,8 +317,8 @@ while (true)
             if (index == i)
             {
                 ship= wszystkieShips[i];
-                ship.removeContainer(staryContainer);
-                ship.addContainer(nowyContainer);
+                ship.RemoveContainer(staryContainer);
+                ship.AddContainer(nowyContainer);
                 break;
             }
         }
@@ -279,7 +326,7 @@ while (true)
     
 
 
-    if (response.Equals("10"))
+    if (response.Equals("11"))
     {
         Console.WriteLine("Podaj serial number kontenera do przeniesienia (np. KON-C-1)");
         string serialNumber = Console.ReadLine();
@@ -303,24 +350,24 @@ while (true)
             }
         }
         if(shipFrom!=null && shipTo!=null && serialNumber!=null)
-            ContainerShip.relocateContainer(serialNumber,shipFrom,shipTo);
+            ContainerShip.RelocateContainer(serialNumber,shipFrom,shipTo);
     }
 
-    if (response.Equals("11"))
+    if (response.Equals("12"))
     {
         Console.WriteLine("Podaj serial number kontenera");
         string serialNumber = Console.ReadLine();
         for (int i = 0; i < wszystkieContainers.Count; i++)
         {
-            if (serialNumber.Equals(wszystkieContainers[i].serialNumber))
+            if (serialNumber.Equals(wszystkieContainers[i].SerialNumber))
             {
-                wszystkieContainers[i].infoAboutContainer();
+                wszystkieContainers[i].InfoAboutContainer();
                 break;
             }
         }
     }
 
-    if (response.Equals("12"))
+    if (response.Equals("13"))
     {
         Console.WriteLine("Podaj index statku");
         int index = int.Parse(Console.ReadLine());
@@ -328,7 +375,7 @@ while (true)
         {
             if (index == i)
             {
-                wszystkieShips[i].infoAboutShip();
+                wszystkieShips[i].InfoAboutShip();
                 break;
             }
         }

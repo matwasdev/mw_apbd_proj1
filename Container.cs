@@ -3,53 +3,53 @@
 
 public abstract class Container
 {
-    public double masaLadunku { get; set; }
-    public double height { get; set; }
-    public double wagaSamegoKontenera { get; set; }
-    public double depth { get; set; }
-    public double maxCapacity { get; set; }
-    public string serialNumber { get; set; }
+    public double MasaLadunku { get; set; }
+    public double Height { get; set; }
+    public double WagaSamegoKontenera { get; set; }
+    public double Depth { get; set; }
+    public double MaxCapacity { get; set; }
+    public string SerialNumber { get; set; }
 
     public static int CONTAINER_NUMBER { get; set; } = 0;
 
-    public bool isOnShip { get; set; } = false;
+    public bool IsOnShip { get; set; } = false;
     public Container(double masaLadunku, double height, double wagaSamegoKontenera, double depth,
         double maxCapacity)
     {
-        this.masaLadunku = masaLadunku;
-        this.height = height;
-        this.wagaSamegoKontenera = wagaSamegoKontenera;
-        this.depth = depth;
-        this.maxCapacity = maxCapacity;
+        MasaLadunku = masaLadunku;
+        Height = height;
+        WagaSamegoKontenera = wagaSamegoKontenera;
+        Depth = depth;
+        MaxCapacity = maxCapacity;
 
         ++CONTAINER_NUMBER;
     }
 
     
 
-    public abstract void fillContainer(int weightToFill);
-    public abstract void unfillContainer();
+    public abstract void FillContainer(double weightToFill);
+    public abstract void UnfillContainer();
 
 
-    public void infoAboutContainer()
+    public void InfoAboutContainer()
     {
-        Console.WriteLine("SERIAL-NUMBER: " +serialNumber);
-        Console.WriteLine("LOADED-WEIGHT: " +masaLadunku);
-        Console.WriteLine("HEIGHT: " +height);
-        Console.WriteLine("ONLY-CONTAINER-WEIGHT: " + wagaSamegoKontenera);
-        Console.WriteLine("MAX-CAPACITY: " +maxCapacity);
+        Console.WriteLine("SERIAL-NUMBER: " +SerialNumber);
+        Console.WriteLine("LOADED-WEIGHT: " +MasaLadunku);
+        Console.WriteLine("HEIGHT: " +Height);
+        Console.WriteLine("ONLY-CONTAINER-WEIGHT: " + WagaSamegoKontenera);
+        Console.WriteLine("MAX-CAPACITY: " +MaxCapacity);
         Console.WriteLine();
     }
 
-    public String infoContainerShorter()
+    public String InfoContainerShorter()
     {
         String onship = "";
-        if(isOnShip)
+        if(IsOnShip)
             onship = "ON SHIP!";
             
         
-        return "(ID: " + serialNumber + ", loadedWeight="+masaLadunku+", height="+height+", " +
-               "onlyContainerWeight="+wagaSamegoKontenera+", maxCapacity="+maxCapacity+") "+onship;
+        return "(ID: " + SerialNumber + ", loadedWeight="+MasaLadunku+", height="+Height+", " +
+               "onlyContainerWeight="+WagaSamegoKontenera+", maxCapacity="+MaxCapacity+") "+onship;
     }
 
 

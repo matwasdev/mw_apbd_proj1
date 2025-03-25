@@ -3,6 +3,6 @@
 public interface IHazardNotifier
 {
     
-    void sendWarningNotification();
+    void SendWarningNotification();
     
 }
